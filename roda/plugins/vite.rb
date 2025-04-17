@@ -1,4 +1,5 @@
 require_relative '../../vite_roda/vite_roda'
+require_relative '../../tag_builder'
 
 class Roda
   module RodaPlugins
@@ -49,7 +50,7 @@ class Roda
 
         def vite(asset_paths)
           asset_paths = Array(asset_paths)
-          tag_builder = TagBuilder.new
+          tag_builder = TagBuilder.new(env)
 
           asset_paths.each do |asset_path|
             if STYLESHEET_MATCHER.match?(asset_path)
@@ -57,11 +58,11 @@ class Roda
             elsif TYPESCRIPT_MATCHER.match?(asset_path)
               tag_builder.add_typescript(asset_path)
             else
-              tag_build.add_javascript(asset_path)
+              tag_builder.add_javascript(asset_path)
             end
           end
 
-          TagBuilder.tags!
+          tag_builder.tags!
         end
 
       end
