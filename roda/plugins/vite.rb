@@ -28,6 +28,7 @@ class Roda
         #   <%= vite('resources/js/app.js') %>
         #   <%= vite(['resources/js/app.js', 'resources/css/app.css']) %>
 
+=begin
         def vite(asset_paths)
           asset_paths = Array(asset_paths)
           vite_hmr_tag = vite_client
@@ -44,6 +45,25 @@ class Roda
 
           vite_hmr_tag ? "#{vite_hmr_tag}#{asset_tags}" : asset_tags
         end
+=end
+
+        def vite(asset_paths)
+          asset_paths = Array(asset_paths)
+          tag_builder = TagBuilder.new
+
+          asset_paths.each do |asset_path|
+            if STYLESHEET_MATCHER.match?(asset_path)
+              tag_builder.add_stylesheet(asset_path)
+            elsif TYPESCRIPT_MATCHER.match?(asset_path)
+              tag_builder.add_typescript(asset_path)
+            else
+              tag_build.add_javascript(asset_path)
+            end
+          end
+
+          TagBuilder.tags!
+        end
+
       end
     end
     register_plugin(:vite, Vite)
