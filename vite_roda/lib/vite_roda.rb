@@ -20,7 +20,6 @@ require_relative "vite_roda/tag_helpers"
 ViteRuby::COMPANION_LIBRARIES['vite_roda'] = 'roda'
 # ViteRuby::COMPANION_LIBRARIES['roda-vite'] = 'roda'
 
-
 module ViteRoda
 
   # # Internal: Called when the Rack app is available.
