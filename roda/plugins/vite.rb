@@ -11,6 +11,15 @@ class Roda
       end
 
       def self.configure(app, opts=OPTS)
+        # Can be skipped with config skipProxy: true or env VITE_RUBY_SKIP_PROXY="true"
+        proxy_dev_server(app)
+      end
+
+      # Vite Ruby proxies the Vite dev server localhost:3036 at localhost:9292. I'm not sure
+      # why it does this, rather than just linking to localhost:3036, but it does, so this
+      # is added for backward-compatibility and to minimally change Vite Ruby's behavior
+      def self.proxy_dev_server(app)
+        app.use(ViteRuby::DevServerProxy, ssl_verify_none: true) if ViteRuby.run_proxy?
       end
 
       STYLESHEET_MATCHER = /\.(css|scss|sass|less|styl)$/
