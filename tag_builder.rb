@@ -1,4 +1,4 @@
-require_relative 'vite_roda/vite_roda'
+require_relative 'vite_roda/lib/vite_roda'
 
 class TagBuilder
 
