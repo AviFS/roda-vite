@@ -3,6 +3,7 @@
 require "vite_ruby"
 require_relative "vite_roda/version"
 require_relative "vite_roda/tag_helpers"
+require_relative "vite_roda/config"
 
 # ViteRuby::COMPANION_LIBRARIES is a hash containing the companion
 # libraries for Vite Ruby, and their target framework, defined at:
