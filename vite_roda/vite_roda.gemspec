@@ -25,4 +25,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir.glob('{lib,templates}/**/*') # + %w[README.md CHANGELOG.md LICENSE.txt]
   # s.files = Dir.glob('{.,vite_roda/templates}/**/*') # + %w[README.md CHANGELOG.md LICENSE.txt]
+
+  s.bindir = ['bin']
+  s.executables = ['roda-vite']
 end
