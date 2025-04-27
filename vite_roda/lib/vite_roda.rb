@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require "vite_ruby"
-require_relative "vite_roda/version"
+module ViteRoda; end
+
+require "vite_ruby-roda" # Patched "vite_ruby"
 require_relative "vite_roda/tag_helpers"
 require_relative "vite_roda/config"
 
@@ -18,7 +19,7 @@ require_relative "vite_roda/config"
 
 
 # I believe this might need to match the name of the gem
-ViteRuby::COMPANION_LIBRARIES['vite_roda'] = 'roda'
+ViteRuby::COMPANION_LIBRARIES['roda-vite'] = 'roda'
 # ViteRuby::COMPANION_LIBRARIES['roda-vite'] = 'roda'
 
 module ViteRoda

@@ -14,7 +14,7 @@ require "vite_roda"
 # Internal: Extends the base installation script from Vite Ruby to work for a
 # typical Roda app.
 module ViteRoda::Installation
-  RODA_TEMPLATES = Pathname.new(File.expand_path("../../templates", __dir__))
+  RODA_TEMPLATES = Pathname.new(File.expand_path("../../../../templates", __dir__))
 
   # def call(**options)
   #   ensure_roda_plugin_added
@@ -41,14 +41,27 @@ module ViteRoda::Installation
     # say "Installing sample files"
     install_sample_files
 
-    # Only output the command to run, don't run it
-    # say "Installing js dependencies"
-    install_js_dependencies
+    # Only return the command to run, don't run it
+    js_command = install_js_dependencies
 
     # say "Adding files to .gitignore"
     # install_gitignore
 
     # say "\nVite ⚡️ Ruby successfully installed! 🎉"
+
+    MESSAGE = <<~DOC
+    \e[2mIf you have your css in \e[36massets/css/app.css\e[0;2m, you'll want to add the following to your html:
+
+    \e[2m   <head>\e[m
+    \e[32m+    <%= vite(['app.css']) %>\e[m
+    \e[2m   </head>\e[m
+
+    \e[2mVite accepts an asset array including css, scss, javascript and typescript.
+
+    To install \e[36mnode_modules/\e[0;2m, run:
+
+    \e[0;1;36m  #{js_command}\e[m
+    DOC
   end
 
   # Internal: Ensures the Vite plugin is loaded in app.rb
@@ -107,12 +120,11 @@ module ViteRoda::Installation
     # Vite Roda opts out of this behavior for now, instead outputting the instructions:
     # run_with_capture("#{config.package_manager} add -D #{deps}", stdin_data: "\n")
 
-    puts "Run:"
     # Escape the ^ in version specifier for ZSH interop converting:
     #   npm add -D vite@^6.2.6 vite-plugin-ruby@^5.1.1
     #   npm add -D vite@\^6.2.6 vite-plugin-ruby@\^5.1.1
     deps = deps.gsub('^', '\^')
-    puts "#{config.package_manager} add -D #{deps}"
+    "#{config.package_manager} add -D #{deps}"
   end
 
   # Internal: Creates the Vite and vite-plugin-ruby configuration files.
@@ -134,6 +146,6 @@ module ViteRoda::Installation
 
 end
 
-puts "VITE RODA CLI" if ARGV.any?('-v')
+puts "VITE RODA CLI"
 
 ViteRuby::CLI::Install.prepend(ViteRoda::Installation)
