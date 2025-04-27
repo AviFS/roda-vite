@@ -49,7 +49,7 @@ module ViteRoda::Installation
 
     # say "\nVite ⚡️ Ruby successfully installed! 🎉"
 
-    MESSAGE = <<~DOC
+    puts <<~POST_INSTALL_MESSAGE
     \e[2mIf you have your css in \e[36massets/css/app.css\e[0;2m, you'll want to add the following to your html:
 
     \e[2m   <head>\e[m
@@ -61,14 +61,29 @@ module ViteRoda::Installation
     To install \e[36mnode_modules/\e[0;2m, run:
 
     \e[0;1;36m  #{js_command}\e[m
-    DOC
+    POST_INSTALL_MESSAGE
   end
 
-  # Internal: Ensures the Vite plugin is loaded in app.rb
+  # Internal: Ensures the Vite plugin is loaded in app.rb, or [app_name].rb
+  # This check is skipped if the -f or --force flag is passed
   def ensure_roda_plugin_added
-    unless line_with_prefix_exists? root.join("app.rb"), "plugin :vite"
-       abort "Add plugin :vite to your app.rb before installing"
+    return if ARGV.any? { |flag| ['-f', '--force'].include? flag }
+
+    unless line_with_prefix_exists? root.join('app.rb'), 'plugin :vite' ||
+           line_with_prefix_exists? root.join("#{app_name}.rb"), 'plugin :vite'
+       abort "Add plugin :vite to your Roda app (found in app.rb or #{app_name}.rb) before installing, or pass -f to force."
     end
+  end
+
+  # Internal: Get probable app_name for checking if plugin :vite has been loaded.
+  # If this is wrong, the install subcommand can always be forced with -f.
+  def app_name
+
+    # Return the name of current working directory, for now. More complex logic may be added
+    # here, including returning a list of probable app_names for use with #any? like:
+    #   unless files.any? { |file| line_with_prefix_exists?(file, 'plugin :vite') }
+
+    File.basename(Dir.pwd)
   end
 
   # Using String#lstrip and String#start_with? is supposedly faster than using Regex as:
@@ -146,6 +161,6 @@ module ViteRoda::Installation
 
 end
 
-puts "VITE RODA CLI"
+puts "VITE RODA CLI" if ARGV.include?('--debug')
 
 ViteRuby::CLI::Install.prepend(ViteRoda::Installation)
