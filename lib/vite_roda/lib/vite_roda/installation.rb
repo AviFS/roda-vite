@@ -21,9 +21,14 @@ module ViteRoda::Installation
   #   super
   # end
 
-  def call(package_manager: nil, **)
+  # Add additional options
+  def self.prepended(base)
+    base.option :force, type: :flag, aliases: ['-f'], desc: "Force installation, skip checking that 'plugin :vite' was added."
+  end
 
-    ensure_roda_plugin_added
+  def call(package_manager: nil, **options)
+
+    ensure_roda_plugin_added unless options[:force]
 
     ENV["VITE_RUBY_PACKAGE_MANAGER"] ||= package_manager if package_manager
 
@@ -67,10 +72,8 @@ module ViteRoda::Installation
   # Internal: Ensures the Vite plugin is loaded in app.rb, or [app_name].rb
   # This check is skipped if the -f or --force flag is passed
   def ensure_roda_plugin_added
-    return if ARGV.any? { |flag| ['-f', '--force'].include? flag }
-
-    unless line_with_prefix_exists? root.join('app.rb'), 'plugin :vite' ||
-           line_with_prefix_exists? root.join("#{app_name}.rb"), 'plugin :vite'
+    unless line_with_prefix_exists?(root.join('app.rb'), 'plugin :vite') ||
+           line_with_prefix_exists?(root.join("#{app_name}.rb"), 'plugin :vite')
        abort "Add plugin :vite to your Roda app (found in app.rb or #{app_name}.rb) before installing, or pass -f to force."
     end
   end
