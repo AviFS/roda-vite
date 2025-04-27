@@ -1,0 +1,15 @@
+{
+  "all": {
+    "sourceCodeDir": "resources",
+    "watchAdditionalPaths": [],
+    "publicOutputDir": "build",
+    "emptyOutDir": true,
+    "autoBuild": false
+  },
+  "development": {
+    "port": 3036
+  },
+  "test": {
+    "port": 3037
+  }
+}

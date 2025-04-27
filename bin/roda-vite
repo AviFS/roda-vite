@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require 'roda-vite'
+load Gem.bin_path('vite_ruby-roda', 'vite')
